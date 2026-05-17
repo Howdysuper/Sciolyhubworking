@@ -1,0 +1,8 @@
+{
+  "name": "SciOly Hub",
+  "description": "A comprehensive digital events guide and medalist archive for Science Olympiad enthusiasts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

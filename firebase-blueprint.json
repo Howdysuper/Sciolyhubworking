@@ -1,0 +1,26 @@
+{
+  "entities": {
+    "medalist": {
+      "title": "Medalist",
+      "description": "A past medalist entry with competition details and advice.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "eventName": { "type": "string" },
+        "year": { "type": "number" },
+        "medal": { "type": "string", "enum": ["Gold", "Silver", "Bronze", "Top 6"] },
+        "resources": { "type": "array", "items": { "type": "string" } },
+        "advice": { "type": "string" },
+        "level": { "type": "string", "enum": ["Online Invitationals", "In-person Invitationals", "Regionals", "State", "Nationals"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "eventName", "year", "medal", "advice", "level"]
+    }
+  },
+  "firestore": {
+    "medalists": {
+      "schema": "medalist",
+      "description": "Collection of past medalist entries."
+    }
+  }
+}

@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function isValidMedalist(data) {
+      return data.keys().hasAll(['eventName', 'year', 'medal', 'advice', 'level']) &&
+             data.eventName is string && data.eventName.size() > 0 && data.eventName.size() <= 100 &&
+             data.year is int && data.year >= 2000 && data.year <= 2100 &&
+             data.medal in ['Gold', 'Silver', 'Bronze', 'Top 6'] &&
+             data.advice is string && data.advice.size() > 0 && data.advice.size() <= 3000 &&
+             data.level in ['Online Invitationals', 'In-person Invitationals', 'Regionals', 'State', 'Nationals'] &&
+             (!data.keys().contains('resources') || (data.resources is list && data.resources.size() <= 20)) &&
+             (!data.keys().contains('createdAt') || data.createdAt == request.time);
+    }
+
+    match /medalists/{medalistId} {
+      allow read: if true; 
+      allow create: if isSignedIn() && isValidMedalist(incoming()) && isValidId(medalistId);
+    }
+  }
+}
